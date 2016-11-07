@@ -588,7 +588,8 @@ def load_config(path):
         'channels': [],
         'docker_image': 'condaforge/linux-anvil',
         'requirements': None,
-        'upload_channel': 'bioconda'
+        'upload_channel': 'bioconda',
+        'conda_build_version': '2.0.8',
     }
     if 'env_matrix' in config:
         if isinstance(config['env_matrix'], str):
