@@ -44,6 +44,9 @@ logger = logging.getLogger(__name__)
 @arg('--build_script_template', help='''Filename to optionally replace build
      script template used by the Docker container. By default use
      docker_utils.BUILD_SCRIPT_TEMPLATE. Only used if --docker is True.''')
+@arg('--docker_file_template', help='''Filename to optionally replace dockerfile
+    template used to build the Docker container. By default use
+    docker_utils.DOCKER_FILE_TEMPLATE. Only used if --docker is True''')
 @arg('--pkg_dir', help='''Specifies the directory to which container-built
      packages should be stored on the host. Default is to use the host's
      conda-bld dir. If --docker is not specified, then this argument is
@@ -62,6 +65,7 @@ def build(recipe_folder,
           loglevel="info",
           mulled_test=False,
           build_script_template=None,
+          docker_file_template=None,
           pkg_dir=None,
           conda_build_version=docker_utils.DEFAULT_CONDA_BUILD_VERSION,
           quick=False,
@@ -80,6 +84,10 @@ def build(recipe_folder,
             build_script_template = open(build_script_template).read()
         else:
             build_script_template = docker_utils.BUILD_SCRIPT_TEMPLATE
+        if docker_file_template is not None:
+            docker_file_template = open(docker_file_template).read()
+        else:
+            docker_file_template = docker_utils.DOCKERFILE_TEMPLATE
         if pkg_dir is None:
             use_host_conda_bld = True
         else:
@@ -87,12 +95,12 @@ def build(recipe_folder,
 
         docker_builder = docker_utils.RecipeBuilder(
             build_script_template=build_script_template,
+            docker_file_template=docker_file_template,
             pkg_dir=pkg_dir,
             use_host_conda_bld=use_host_conda_bld,
             conda_build_version=cfg.get('conda_build_version'),
             image=cfg.get('docker_image'),
             requirements=cfg.get('requirements'),
-            dockerfile_template=cfg.get('docker_template'),
         )
     else:
         docker_builder = None
