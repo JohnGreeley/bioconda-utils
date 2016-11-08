@@ -91,6 +91,7 @@ def build(recipe_folder,
             use_host_conda_bld=use_host_conda_bld,
             conda_build_version=cfg.get('conda_build_version'),
             image=cfg.get('docker_image'),
+            requirements=cfg.get('requirements'),
         )
     else:
         docker_builder = None
